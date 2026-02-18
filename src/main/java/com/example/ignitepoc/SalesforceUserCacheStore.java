@@ -1,29 +1,36 @@
 package com.example.ignitepoc;
 
+import java.io.Serializable;
+
 import javax.cache.Cache;
-import javax.cache.integration.CacheLoaderException;
 
 import org.apache.ignite.cache.store.CacheStoreAdapter;
 
-public final class SalesforceUserCacheStore extends CacheStoreAdapter<String, SalesforceUserDetails> {
-    private final SalesforceClient salesforceClient;
+public final class SalesforceUserCacheStore extends CacheStoreAdapter<String, SalesforceUserDetails> implements  Serializable{
+    private transient SalesforceClient salesforceClient;
+
+    private static final long serialVersionUID = 1L;
 
     public SalesforceUserCacheStore() {
-        this(new HttpSalesforceClient(SalesforceConfig.fromEnv()));
+        this.salesforceClient = null;
     }
 
     public SalesforceUserCacheStore(SalesforceClient salesforceClient) {
         this.salesforceClient = salesforceClient;
     }
 
-    @Override
-    public SalesforceUserDetails load(String key) throws CacheLoaderException {
-        try {
-            System.out.println(">> Loading user details for userId: " + key);
-            return salesforceClient.getUserById(key);
-        } catch (RuntimeException ex) {
-            throw new CacheLoaderException("Failed to load user from Salesforce", ex);
+   private SalesforceClient client() {
+        if (salesforceClient == null) {
+            salesforceClient =
+                new HttpSalesforceClient(SalesforceConfig.fromEnv());
         }
+        return salesforceClient;
+    }
+
+    @Override
+    public SalesforceUserDetails load(String key) {
+        System.out.println(">> Loading user details for userId: " + key);
+        return client().getUserById(key);
     }
 
     @Override

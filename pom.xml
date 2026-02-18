@@ -10,7 +10,7 @@
     <name>ignite-poc</name>
 
     <properties>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ignite.version>2.17.0</ignite.version>
          <argLine>
@@ -84,6 +84,19 @@
                     <mainClass>com.example.ignitepoc.IgniteQuickStart</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    </execution>
+                </executions>
+                </plugin>
         </plugins>
     </build>
 </project>
