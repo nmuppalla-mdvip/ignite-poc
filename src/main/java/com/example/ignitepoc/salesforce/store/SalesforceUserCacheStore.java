@@ -1,4 +1,4 @@
-package com.example.ignitepoc;
+package com.example.ignitepoc.salesforce.store;
 
 import java.io.Serializable;
 
@@ -6,10 +6,15 @@ import javax.cache.Cache;
 
 import org.apache.ignite.cache.store.CacheStoreAdapter;
 
-public final class SalesforceUserCacheStore extends CacheStoreAdapter<String, SalesforceUserDetails> implements  Serializable{
-    private transient SalesforceClient salesforceClient;
+import com.example.ignitepoc.salesforce.client.HttpSalesforceClient;
+import com.example.ignitepoc.salesforce.client.SalesforceClient;
+import com.example.ignitepoc.salesforce.config.SalesforceConfig;
+import com.example.ignitepoc.salesforce.model.SalesforceUserDetails;
 
+public final class SalesforceUserCacheStore extends CacheStoreAdapter<String, SalesforceUserDetails> implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private transient SalesforceClient salesforceClient;
 
     public SalesforceUserCacheStore() {
         this.salesforceClient = null;
@@ -19,10 +24,9 @@ public final class SalesforceUserCacheStore extends CacheStoreAdapter<String, Sa
         this.salesforceClient = salesforceClient;
     }
 
-   private SalesforceClient client() {
+    private SalesforceClient client() {
         if (salesforceClient == null) {
-            salesforceClient =
-                new HttpSalesforceClient(SalesforceConfig.fromEnv());
+            salesforceClient = new HttpSalesforceClient(SalesforceConfig.fromEnv());
         }
         return salesforceClient;
     }

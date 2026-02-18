@@ -1,4 +1,4 @@
-package com.example.ignitepoc;
+package com.example.ignitepoc.salesforce.config;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -7,6 +7,7 @@ import java.util.Optional;
 public final class SalesforceConfig implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
     private final String baseUrl;
     private final String apiVersion;
     private final String authToken;

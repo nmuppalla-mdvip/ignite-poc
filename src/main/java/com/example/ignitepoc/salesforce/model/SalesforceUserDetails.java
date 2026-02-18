@@ -1,6 +1,10 @@
-package com.example.ignitepoc;
+package com.example.ignitepoc.salesforce.model;
 
-public final class SalesforceUserDetails {
+import java.io.Serializable;
+
+public final class SalesforceUserDetails implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final String id;
     private final String name;
     private final String email;

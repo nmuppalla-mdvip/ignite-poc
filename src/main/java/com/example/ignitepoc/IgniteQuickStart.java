@@ -15,6 +15,14 @@ import org.apache.ignite.resources.IgniteInstanceResource;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
 
+import com.example.ignitepoc.postgres.model.PostgresUserDetails;
+import com.example.ignitepoc.postgres.store.PostgresUserCacheStoreFactory;
+import com.example.ignitepoc.salesforce.client.HttpSalesforceClient;
+import com.example.ignitepoc.salesforce.client.SalesforceClient;
+import com.example.ignitepoc.salesforce.config.SalesforceConfig;
+import com.example.ignitepoc.salesforce.model.SalesforceUserDetails;
+import com.example.ignitepoc.salesforce.store.SalesforceUserCacheStore;
+
 public final class IgniteQuickStart {
     private IgniteQuickStart() {
     }
@@ -62,6 +70,19 @@ public final class IgniteQuickStart {
 
         SalesforceUserDetails userDetails1 = userCache.get(salesforceConfig.getUserId()+"123");
         System.out.println(">> Get from cache: " + userDetails1);
+
+        CacheConfiguration<String, PostgresUserDetails> postgresUserCacheCfg =
+            new CacheConfiguration<>("postgresUserDetails");
+        postgresUserCacheCfg.setCacheStoreFactory(new PostgresUserCacheStoreFactory());
+        postgresUserCacheCfg.setReadThrough(true);
+        postgresUserCacheCfg.setWriteThrough(false);
+
+        IgniteCache<String, PostgresUserDetails> postgresUserCache = ignite.getOrCreateCache(postgresUserCacheCfg);
+        PostgresUserDetails postgresUserDetails = postgresUserCache.get("pg-100");
+        System.out.println(">> Postgres user loaded (mock): " + postgresUserDetails);
+
+        PostgresUserDetails postgresUserDetails1 = postgresUserCache.get("pg-admin");
+        System.out.println(">> Postgres user loaded (mock): " + postgresUserDetails1);
         // Executing custom Java compute task on server nodes.
         ignite.compute(ignite.cluster().forServers()).broadcast(new RemoteTask());
 
