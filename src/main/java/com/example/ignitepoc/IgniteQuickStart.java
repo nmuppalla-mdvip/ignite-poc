@@ -57,10 +57,10 @@ public final class IgniteQuickStart {
         userCacheCfg.setWriteThrough(false);
 
         IgniteCache<String, SalesforceUserDetails> userCache = ignite.getOrCreateCache(userCacheCfg);
-        SalesforceUserDetails userDetails = userCache.get(salesforceConfig.getUserId());
+        SalesforceUserDetails userDetails = userCache.get(salesforceConfig.getUserId()+"123");
         System.out.println(">> Salesforce user loaded: " + userDetails);
 
-        SalesforceUserDetails userDetails1 = userCache.get("12345");
+        SalesforceUserDetails userDetails1 = userCache.get(salesforceConfig.getUserId()+"123");
         System.out.println(">> Get from cache: " + userDetails1);
         // Executing custom Java compute task on server nodes.
         ignite.compute(ignite.cluster().forServers()).broadcast(new RemoteTask());
