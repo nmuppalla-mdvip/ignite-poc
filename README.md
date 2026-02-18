@@ -1,29 +1,47 @@
-# Apache Ignite PoC (Java 21)
+# Apache Ignite PoC (Java 17)
 
-Minimal Maven project to run a local Apache Ignite node and perform a cache put/get.
+Apache Ignite proof-of-concept showing read-through caching with two independent data source modules:
+
+- Salesforce module (`com.example.ignitepoc.salesforce.*`)
+- Postgres module (`com.example.ignitepoc.postgres.*`)
 
 ## Prerequisites
-- Java 21
+
+- Java 17
 - Maven
 
 ## Run
-- Build: mvn -q -DskipTests package
-- Run: mvn -q -DskipTests exec:java
 
-## Java 21 module access
-The project includes [.mvn/jvm.config](.mvn/jvm.config) to open `java.nio` for Ignite.
+- Build: `mvn clean package`
+- Run: `mvn -q -DskipTests exec:java`
 
-## Salesforce cache loader
-The `userDetails` cache is configured with a read-through cache loader that fetches user details from Salesforce.
+## What it demonstrates
 
-Environment variables:
-- `SF_BASE_URL` (example: https://yourInstance.my.salesforce.com)
-- `SF_API_VERSION` (default: v59.0)
-- `SF_AUTH_TOKEN` (OAuth bearer token)
-- `SF_USER_ID` (default: 005000000000000)
+- Ignite client node startup and cache operations (`myCache`).
+- Salesforce read-through cache (`userDetails`).
+- Postgres read-through cache (`postgresUserDetails`, currently mock-backed for demo stability).
+- Compute task broadcast to server nodes.
 
-## What it does
-- Starts a local Ignite node.
-- Creates/opens a cache named `myCache`.
-- Puts and gets a value, then prints it.
-- Loads a Salesforce user into `userDetails` cache (mocked if not configured).
+## Configuration
+
+### Salesforce
+
+- `SF_BASE_URL`
+- `SF_API_VERSION` (default: `v59.0`)
+- `SF_AUTH_TOKEN`
+- `SF_USER_ID` (default: `005000000000000`)
+
+If Salesforce vars are missing, the client returns mock data.
+
+### Postgres
+
+- `POSTGRES_HOST` (default: `localhost`)
+- `POSTGRES_PORT` (default: `5432`)
+- `POSTGRES_DB` (default: `ignite_demo`)
+- `POSTGRES_USER` (default: `ignite_user`)
+
+Current Postgres client is mock-based for demo purposes.
+
+## Documentation
+
+- Demo flow and presenter notes: [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md)
