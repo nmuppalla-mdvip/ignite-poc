@@ -77,6 +77,46 @@ Why this matters in demo:
 9. Compute task broadcasts to server nodes and prints node/runtime info.
 10. Ignite node closes.
 
+### Runtime Flow Diagram
+
+```mermaid
+flowchart TD
+    A[Start IgniteQuickStart] --> B[Build IgniteConfiguration]
+    B --> C[Load SalesforceConfig from env]
+    C --> D[Create HttpSalesforceClient]
+    D --> E[Start Ignite client node]
+
+    E --> F[Create myCache]
+    F --> G[Put values: 1=Hello, 2=World!]
+    G --> H[Get and print myCache values]
+
+    H --> I[Configure Salesforce cache userDetails]
+    I --> J{Get Salesforce user}
+    J -->|Cache miss| K[SalesforceUserCacheStore.load]
+    K --> L[Fetch from Salesforce or mock]
+    L --> M[Return SalesforceUserDetails]
+    M --> N[Store in cache + print loaded user]
+    N --> O{Get Salesforce user again}
+    O -->|Cache hit| P[Return cached SalesforceUserDetails]
+
+    P --> Q[Configure Postgres cache postgresUserDetails]
+    Q --> R{Get Postgres user pg 100}
+    R -->|Cache miss| S[PostgresUserCacheStore.load]
+    S --> T[MockPostgresUserClient fetch]
+    T --> U[Return PostgresUserDetails]
+    U --> V[Store in cache + print user]
+
+    V --> W{Get Postgres user pg admin}
+    W -->|Cache miss| X[PostgresUserCacheStore.load]
+    X --> Y[MockPostgresUserClient fetch]
+    Y --> Z[Return + print user]
+
+    Z --> AA[Broadcast RemoteTask to server nodes]
+    AA --> AB[Server nodes print runtime info and read myCache]
+    AB --> AC[Close Ignite node]
+    AC --> AD[End]
+```
+
 ## 4) Demo Script (Suggested Talk Track)
 
 ### Phase 1: Architecture (1-2 min)
