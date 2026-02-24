@@ -57,6 +57,7 @@ public final class IgniteQuickStart {
 
         System.out.println(">> Get values from cache: " + cache.get(1) + " " + cache.get(2));
 
+        //salesforce cache store configuration
         CacheConfiguration<String, SalesforceUserDetails> userCacheCfg =
             new CacheConfiguration<>("userDetails");
         SalesforceUserCacheStore userCacheStore = new SalesforceUserCacheStore(salesforceClient);
@@ -71,6 +72,7 @@ public final class IgniteQuickStart {
         SalesforceUserDetails userDetails1 = userCache.get(salesforceConfig.getUserId()+"123");
         System.out.println(">> Get from cache: " + userDetails1);
 
+        //postgres cache store configuration
         CacheConfiguration<String, PostgresUserDetails> postgresUserCacheCfg =
             new CacheConfiguration<>("postgresUserDetails");
         postgresUserCacheCfg.setCacheStoreFactory(new PostgresUserCacheStoreFactory());

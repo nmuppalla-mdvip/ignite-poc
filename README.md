@@ -28,10 +28,13 @@ Apache Ignite proof-of-concept showing read-through caching with two independent
 
 - `SF_BASE_URL`
 - `SF_API_VERSION` (default: `v59.0`)
-- `SF_AUTH_TOKEN`
+- `SF_OAUTH_TOKEN` (used to fetch `Id,Name`)
+- `SF_SERVICE_TOKEN` (used to fetch `Email`)
+- `SF_AUTH_TOKEN` (legacy fallback for `SF_OAUTH_TOKEN`)
+- `SF_MOCK_MODE` (default: `true`; set to `false` to use real Salesforce HTTP calls)
 - `SF_USER_ID` (default: `005000000000000`)
 
-If Salesforce vars are missing, the client returns mock data.
+By default, Salesforce calls are mocked for demo stability while still showing split-token flow (`Id,Name` via OAuth path and `Email` via service-token path).
 
 ### Postgres
 
@@ -45,3 +48,4 @@ Current Postgres client is mock-based for demo purposes.
 ## Documentation
 
 - Demo flow and presenter notes: [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md)
+- Leadership decision framework and presentation flow: [docs/LEADERSHIP_DECISION_PLAYBOOK.md](docs/LEADERSHIP_DECISION_PLAYBOOK.md)
